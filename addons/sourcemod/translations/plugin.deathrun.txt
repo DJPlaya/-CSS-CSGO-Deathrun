@@ -1,0 +1,79 @@
+"Phrases"
+{
+	"DEATHRUN"
+	{
+		"en"		"Deathrun"
+	}
+	
+	"PLAYER"
+	{
+		"en"		"Player"
+	}
+	
+	"CHOOSEN"
+	{
+		"en"		"Choosen"
+	}
+	
+	"RANDOMIZING_CHOOSENS"
+	{
+		"en"		"Choosing player(s)..."
+	}
+	
+	"MIXING_PLAYERS"
+	{
+		"en"		"Mixing players..."
+	}
+	
+	"RANDOMIZING_ERROR"
+	{
+		"en"		"Need more players to start a new round..."
+	}
+	
+	"HAS_BEEN_CHOOSEN"
+	{
+		"en"		"has been chosen!"
+	}
+	
+	"REPLACE_CHOOSEN"
+	{
+		"en"		"replaced the previously chosen!"
+	}
+	
+	"NEW_CHOOSENS"
+	{
+		"en"		"New choosens: "
+	}
+	
+	"CANT_JOIN_CHOOSENS_TEAM"
+	{
+		"en"		"You can't join this team"
+	}
+	
+	"CANT_JOIN_ANOTHER"
+	{
+		"en"		"You can't suicide!"
+	}
+	
+	"CHOOSENS_CANT_SUICIDE"
+	{
+		"en"		"You can't suicide!"
+	}
+	
+	"AUTORESPAWN"
+	{
+		"en"		"Autorespawn"
+	}
+	
+	"AUTORESPAWN_TIME_LEFT"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} second(s) left..."
+	}
+	
+	"CHOOSEN_DISCONNECTED"
+	{
+		"#format"	"{1:i}"
+		"en"		"disconnected, the player have been banned for {1} minutes!"
+	}
+}

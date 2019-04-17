@@ -1,0 +1,79 @@
+"Phrases"
+{
+	"DEATHRUN"
+	{
+		"de"		"Deathrun"
+	}
+	
+	"PLAYER"
+	{
+		"de"		"Spieler"
+	}
+	
+	"CHOOSEN"
+	{
+		"de"		"Aktivator"
+	}
+	
+	"RANDOMIZING_CHOOSENS"
+	{
+		"de"		"Wähle Spieler..."
+	}
+	
+	"MIXING_PLAYERS"
+	{
+		"de"		"Mixe Spieler..."
+	}
+	
+	"RANDOMIZING_ERROR"
+	{
+		"de"		"Brauche mehr Spieler um eine neue Runde zu starten..."
+	}
+	
+	"HAS_BEEN_CHOOSEN"
+	{
+		"de"		"wurde auserwählt!"
+	}
+	
+	"REPLACE_CHOOSEN"
+	{
+		"de"		"ersetzte den vorherigen Aktivator!"
+	}
+	
+	"NEW_CHOOSENS"
+	{
+		"de"		"Neue Aktivatoren: "
+	}
+	
+	"CANT_JOIN_CHOOSENS_TEAM"
+	{
+		"de"		"Du kannst diesem Team nicht beitreten"
+	}
+	
+	"CANT_JOIN_ANOTHER"
+	{
+		"de"		"Selbstmord ist nicht gestattet!"
+	}
+	
+	"CHOOSENS_CANT_SUICIDE"
+	{
+		"de"		"Selbstmord ist nicht gestattet!"
+	}
+	
+	"AUTORESPAWN"
+	{
+		"de"		"Autorespawn"
+	}
+	
+	"AUTORESPAWN_TIME_LEFT"
+	{
+		"#format"	"{1:i}"
+		"de"		"{1} Sekunden verbleibend..."
+	}
+	
+	"CHOOSEN_DISCONNECTED"
+	{
+		"#format"	"{1:i}"
+		"de"		"verbindung geschlossen, der Spieler wurde für {1} Minuten gebannt!"
+	}
+}
