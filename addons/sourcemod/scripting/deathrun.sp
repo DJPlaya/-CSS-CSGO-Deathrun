@@ -1,56 +1,53 @@
-#pragma semicolon 1
-
-#include <sourcemod>
 #include <sdktools>
 #include <cstrike>
 #include <csgo_colors>
 #include <morecolors>
 #include <sdkhooks>
 
-#pragma newdecls required
+#define PLUGIN_VERSION "2.0.dev11-B"
 
-#define PLUGIN_NAME			"Deathrun"
-#define PLUGIN_DESCRIPTION	"Deathrun manager for CS:S and CS:GO"
-#define PLUGIN_VERSION		"2.0.dev11"
-#define PLUGIN_AUTHOR		"selax"
-#define PLUGIN_URL			"https://github.com/selax/deathrun"
-
-#define ROUNDEND_CTS_WIN			8
-#define ROUNDEND_TERRORISTS_WIN		9
-
-public Plugin myinfo =
-{
-	name		= PLUGIN_NAME,
-	author		= PLUGIN_AUTHOR,
-	description	= PLUGIN_DESCRIPTION,
-	version		= PLUGIN_VERSION,
-	url			= PLUGIN_URL
-};
+#define ROUNDEND_CTS_WIN 8
+#define ROUNDEND_TERRORISTS_WIN 9
 
 EngineVersion GameVersion;
 
-ConVar	config_Enabled;
-ConVar	config_BlockUsePickup;
-ConVar	config_WinPoint;
-ConVar	config_AutoRespawn;
-ConVar	config_AutoRespawnHint;
-ConVar	config_AutoBan;
-ConVar	config_MinPlayers;
-ConVar	config_RandomPlayers;
-ConVar	config_RandomRate;
-ConVar	config_Scores;
-ConVar	config_KillForSuicide;
-ConVar	config_AntiSuicide;
-ConVar	config_ChangeSuicideAttacker;
+ConVar config_Enabled, config_BlockUsePickup, config_WinPoint, config_AutoRespawn, config_AutoRespawnHint, config_AutoBan, config_MinPlayers, config_RandomPlayers, config_RandomRate, config_Scores, config_KillForSuicide, config_AntiSuicide, config_ChangeSuicideAttacker;
 
+bool OldChoosens[MAXPLAYERS + 1], NewChoosens[MAXPLAYERS + 1];
+int kills[MAXPLAYERS + 1], deaths[MAXPLAYERS + 1], score[MAXPLAYERS + 1];
 
-bool	OldChoosens	[ MAXPLAYERS + 1 ];
-bool	NewChoosens	[ MAXPLAYERS + 1 ];
+public Plugin myinfo = 
+{
+	name = "Deathrun", 
+	author = "selax (Playa Edit)", 
+	description = "Deathrun manager for CS:S and CS:GO", 
+	version = PLUGIN_VERSION, 
+	url = "FunForBattle"
+};
 
-int		kills		[ MAXPLAYERS + 1 ];
-int		deaths		[ MAXPLAYERS + 1 ];
-int		score		[ MAXPLAYERS + 1 ];
+public void OnPluginStart()
+{
+	GameVersion = GetEngineVersion();
+	
+	CreateConVar("dr_version", PLUGIN_VERSION, "Plugin Version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	
+	config_Enabled = CreateConVar("dr_enable", "1", "Enable the deathrun manager plugin?", FCVAR_NONE, true, 0.0, true, 1.0);
+	config_BlockUsePickup = CreateConVar("dr_blockusepickup", "1", "Block pickup weapons by use?", FCVAR_NONE, true, 0.0, true, 1.0);
+	
+	LoadTranslations("plugin.deathrun");
+	
+	AutoExecConfig(false, "main", "deathrun");
+	
+	PluginStart_AntiSuicide();
+	PluginStart_Events();
+	PluginStart_AutoRespawn();
+	PluginStart_Scores();
+	PluginStart_Bans();
+	PluginStart_Random();
+	PluginStart_WinPoints();
+}
 
+// Need to be included at this Position
 #include "deathrun/messages.sp"
 #include "deathrun/random.sp"
 #include "deathrun/antisuicide.sp"
@@ -60,115 +57,72 @@ int		score		[ MAXPLAYERS + 1 ];
 #include "deathrun/savescores.sp"
 #include "deathrun/winpoints.sp"
 
-public void OnPluginStart ( )
+public void OnMapStart()
 {
-	GameVersion = GetEngineVersion ( );
-	
-	CreateConVar ( "dr_version", PLUGIN_VERSION, PLUGIN_URL, FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_DONTRECORD );
-	
-	config_Enabled			= CreateConVar ( "dr_enable",			"1",	"Enable the deathrun manager plugin?",					FCVAR_NONE, true, 0.0, true, 1.0	);
-	config_BlockUsePickup	= CreateConVar ( "dr_blockusepickup",	"1",	"Block pickup weapons by use?",							FCVAR_NONE, true, 0.0, true, 1.0	);
-	
-	LoadTranslations ( "plugin.deathrun" );
-	
-	AutoExecConfig ( false, "main", "deathrun"	);
-	
-	PluginStart_AntiSuicide	( );
-	PluginStart_Events		( );
-	PluginStart_AutoRespawn	( );
-	PluginStart_Scores		( );
-	PluginStart_Bans		( );
-	PluginStart_Random		( );
-	PluginStart_WinPoints	( );
-}
-
-public void OnMapStart ( )
-{
-	if ( !config_Enabled.BoolValue )
-	{
+	if(!config_Enabled.BoolValue)
 		return;
-	}
-	
-	OnMapStart_Random ( );
+		
+	OnMapStart_Random();
 }
 
-public void OnClientPutInServer ( int client )
+public void OnClientPutInServer(int client)
 {
-	SDKHook( client, SDKHook_WeaponCanUse,	OnWeaponCanUse	);
-	SDKHook( client, SDKHook_WeaponDrop,	OnWeaponDrop	);
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 	
-	if ( !config_Enabled.BoolValue )
-	{
+	if(!config_Enabled.BoolValue)
 		return;
-	}
-	
-	OnClientPutInServer_SaveScores ( client );
+		
+	OnClientPutInServer_SaveScores(client);
 }
 
-public Action OnWeaponCanUse ( int client, int weapon ) 
+public Action OnWeaponCanUse(int client, int weapon)
 {
-	if ( !config_Enabled.BoolValue )
-	{
+	if(!config_Enabled.BoolValue)
 		return Plugin_Continue;
-	}
-	
-	if ( config_BlockUsePickup.BoolValue )
-	{
-		if ( GetClientButtons ( client ) & IN_USE )
-		{
-			return Plugin_Handled; 
-		}
-	}
-	
-	return Plugin_Continue; 
+		
+	if(config_BlockUsePickup.BoolValue)
+		if(GetClientButtons(client) & IN_USE)
+			return Plugin_Handled;
+			
+	return Plugin_Continue;
 }
 
-public Action OnWeaponDrop ( int client, int weapon ) 
+public Action OnWeaponDrop(int client, int weapon)
 {
-	if ( !config_Enabled.BoolValue )
-	{
+	if(!config_Enabled.BoolValue)
 		return Plugin_Continue;
-	}
-	
-	if ( config_BlockUsePickup.BoolValue )
-	{
-		if ( GetClientButtons ( client ) & IN_USE )
-		{
-			return Plugin_Handled; 
-		}
-	}
-	
-	return Plugin_Continue; 
+		
+	if(config_BlockUsePickup.BoolValue)
+		if(GetClientButtons(client) & IN_USE)
+			return Plugin_Handled;
+			
+	return Plugin_Continue;
 }
 
-public void OnGameFrame( )
+public void OnGameFrame()
 {
-	if ( !config_Enabled.BoolValue )
-	{
+	if(!config_Enabled.BoolValue)
 		return;
-	}
-	
-	OnGameFrame_SaveScores ( );
+		
+	OnGameFrame_SaveScores();
 }
 
-int GetPlayersCount ( )
+int GetPlayersCount()
 {
-	return GetTeamClientCount ( CS_TEAM_T ) + GetTeamClientCount ( CS_TEAM_CT );
+	return GetTeamClientCount(CS_TEAM_T) + GetTeamClientCount(CS_TEAM_CT);
 }
 
-int GetPlayersTeam ( )
+int GetPlayersTeam()
 {
-	return AnotherTeam ( config_RandomPlayers.IntValue );
+	return AnotherTeam(config_RandomPlayers.IntValue);
 }
 
-int AnotherTeam ( int team )
+int AnotherTeam(int team)
 {
-	if ( team == CS_TEAM_T )
-	{
+	if(team == CS_TEAM_T)
 		return CS_TEAM_CT;
-	}
+		
 	else
-	{
 		return CS_TEAM_T;
-	}
-}
+} 
