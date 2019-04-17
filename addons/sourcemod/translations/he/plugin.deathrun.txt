@@ -1,0 +1,79 @@
+"Phrases"
+{
+	"DEATHRUN"
+	{
+		"he"		"DEATHRUN"
+	}
+	
+	"PLAYER"
+	{
+		"he"		"שחקן"
+	}
+	
+	"CHOOSEN"
+	{
+		"he"		"נבחר"
+	}
+	
+	"RANDOMIZING_CHOOSENS"
+	{
+		"he"		"בוחר שחקן(ים)"
+	}
+	
+	"MIXING_PLAYERS"
+	{
+		"he"		"מערבב שחקנים..."
+	}
+	
+	"RANDOMIZING_ERROR"
+	{
+		"he"		"צריך עוד שחק..."
+	}
+	
+	"HAS_BEEN_CHOOSEN"
+	{
+		"he"		"אתה נבחרת!"
+	}
+	
+	"REPLACE_CHOOSEN"
+	{
+		"he"		"הנבחר הקודם הוחלף!"
+	}
+	
+	"NEW_CHOOSENS"
+	{
+		"he"		"נבחרים חדשים: "
+	}
+	
+	"CANT_JOIN_CHOOSENS_TEAM"
+	{
+		"he"		"אתה לא יכול להיכנס לקבוצה זו"
+	}
+	
+	"CANT_JOIN_ANOTHER"
+	{
+		"he"		"אתה לא יכול להתאבד!"
+	}
+	
+	"CHOOSENS_CANT_SUICIDE"
+	{
+		"he"		"אתה לא יכול להתאבד!"
+	}
+	
+	"AUTORESPAWN"
+	{
+		"he"		"ריספאון אינסוף"
+	}
+	
+	"AUTORESPAWN_TIME_LEFT"
+	{
+		"#format"	"{1:i}"
+		"he"		"{1} שניה(ות)נשארו..."
+	}
+	
+	"CHOOSEN_DISCONNECTED"
+	{
+		"#format"	"{1:i}"
+		"he"		"יצא, השחקן קיבל באן לדקות {1}!"
+	}
+}
