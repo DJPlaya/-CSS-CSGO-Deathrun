@@ -21,7 +21,7 @@ void OnGameFrame_SaveScores()
 			SetEntProp(i, Prop_Data, "m_iDeaths", deaths[i]);
 			
 			if(GameVersion == Engine_CSGO)
-				CS_SetClientContributionScore(i, score[i]);
+				CS_SetClientContributionScore(i, a_iScore[i]);
 		}
 	}
 }
@@ -37,7 +37,7 @@ void PlayerDeath_SaveScores(Event ev)
 	if((client != attacker) && (client != 0))
 	{
 		kills[attacker]++;
-		score[attacker]++;
+		a_iScore[attacker]++;
 	}
 	
 	if((attacker == 0) && (GetClientTeam(client) == GetPlayersTeam()) && (config_RandomPlayers.IntValue > 1) && config_KillForSuicide.BoolValue)
@@ -78,7 +78,7 @@ void ResetPlayerScoreCounters(int client)
 {
 	kills[client] = 0;
 	deaths[client] = 0;
-	score[client] = 0;
+	a_iScore[client] = 0;
 }
 
 public Action command_ResetScore(int client, int args)

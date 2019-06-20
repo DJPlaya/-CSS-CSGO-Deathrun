@@ -1,8 +1,15 @@
+/*TODO
+* Fix Colors for CSGO
+* The new choosen is sometimes printed 2 times on the chat
+* The Activator/Runner ratio dosent work properly
+*/
+
 #include <sdktools>
 #include <cstrike>
-#include <csgo_colors>
+//#include <csgo_colors.inc> // is unavailable
 #include <morecolors>
 #include <sdkhooks>
+#include <smlib/clients>
 
 #define PLUGIN_VERSION "2.0.dev11-B"
 
@@ -14,7 +21,7 @@ EngineVersion GameVersion;
 ConVar config_Enabled, config_BlockUsePickup, config_WinPoint, config_AutoRespawn, config_AutoRespawnHint, config_AutoBan, config_MinPlayers, config_RandomPlayers, config_RandomRate, config_Scores, config_KillForSuicide, config_AntiSuicide, config_ChangeSuicideAttacker;
 
 bool OldChoosens[MAXPLAYERS + 1], NewChoosens[MAXPLAYERS + 1];
-int kills[MAXPLAYERS + 1], deaths[MAXPLAYERS + 1], score[MAXPLAYERS + 1];
+int kills[MAXPLAYERS + 1], deaths[MAXPLAYERS + 1], a_iScore[MAXPLAYERS + 1];
 
 public Plugin myinfo = 
 {

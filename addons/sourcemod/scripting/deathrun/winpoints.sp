@@ -80,7 +80,7 @@ void AddPoint(int client)
 	if(GameVersion == Engine_CSGO)
 	{
 		if(config_Scores.BoolValue)
-			score[client]++;
+			a_iScore[client]++;
 			
 		else
 			CS_SetClientContributionScore(client, CS_GetClientContributionScore(client) + 1);

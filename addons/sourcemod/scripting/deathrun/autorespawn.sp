@@ -48,11 +48,11 @@ public Action respawn_Timer(Handle timer)
 		
 		if(config_AutoRespawnHint.BoolValue)
 		{
-			if(GameVersion == Engine_CSGO)
-				CGOPrintHintTextToAll("  {{#00FFFF==%t}}\n  %t", "AUTORESPAWN", "AUTORESPAWN_TIME_LEFT", autorespawn_Seconds);
-				
-			else if(GameVersion == Engine_CSS)
-				PrintHintTextToAll("%t: %t", "AUTORESPAWN", "AUTORESPAWN_TIME_LEFT", autorespawn_Seconds);
+			//if(GameVersion == Engine_CSGO)
+			//	CGOPrintHintTextToAll("  {{#00FFFF==%t}}\n  %t", "AUTORESPAWN", "AUTORESPAWN_TIME_LEFT", autorespawn_Seconds);
+			
+			//else if(GameVersion == Engine_CSS)
+			PrintHintTextToAll("%t: %t", "AUTORESPAWN", "AUTORESPAWN_TIME_LEFT", autorespawn_Seconds);
 		}
 		
 		// if another timer in this handle - destroy this

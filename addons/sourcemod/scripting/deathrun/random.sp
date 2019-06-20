@@ -3,7 +3,7 @@ int RoundCounter = 0;
 void PluginStart_Random()
 {
 	config_RandomPlayers = CreateConVar("dr_random", "2", "Type of player randomizing, or disable this feature", FCVAR_NONE, true, 0.0, true, 3.0);
-	config_RandomRate = CreateConVar("dr_random_rate", "0", "How many players for one choosen player", FCVAR_NONE, true, 0.0, true, 64.0);
+	config_RandomRate = CreateConVar("dr_random_rate", "0", "How many players for one choosen player", FCVAR_NONE, true, 0.0, true, 64.0); // TODO: Other Values then 0 will cause a complete unbalance
 	
 	RegConsoleCmd("jointeam", command_JoinTeam);
 }
@@ -151,9 +151,11 @@ void PlayerDisconnect_Random(Event ev)
 	{
 		int client = GetClientOfUserId(ev.GetInt("userid"));
 		if(!client || !IsClientInGame(client))
+		{
 			if(!GetChoosenID())
 				ReplaceChoosen();
-				
+		}
+		
 		else if(GetClientTeam(client) == config_RandomPlayers.IntValue)
 			if(GetTeamClientCount(config_RandomPlayers.IntValue) <= 1)
 				ReplaceChoosen();
@@ -225,7 +227,7 @@ public Action ChoosePlayers(Handle timer)
 		return Plugin_Continue;
 		
 	int NewTeam = config_RandomPlayers.IntValue;
-	int OldTeam = GetPlayersTeam();
+	int OldTeam = GetPlayersTeam(); // GetPlayersTeam does switch the Team beeing input true AnotherTeam()
 	for(int i = 1; i <= MaxClients; i++)
 	{
 		OldChoosens[i] = false;
@@ -243,8 +245,11 @@ public Action ChoosePlayers(Handle timer)
 	
 	int ChoosensNum = 1;
 	if(config_RandomRate.IntValue != 0)
+	{
 		ChoosensNum = view_as<int>(GetTeamClientCount(OldTeam) / config_RandomRate.IntValue);
-		
+		PrintToChatAll("[DEBUG PS] Team %i, Count %i, Result %i", OldTeam, GetTeamClientCount(OldTeam), GetTeamClientCount(OldTeam) / config_RandomRate.IntValue); // DEBUG #################
+	}
+	
 	char buffer[256];
 	
 	for(int i = 0; i < ChoosensNum; i++)
@@ -258,18 +263,16 @@ public Action ChoosePlayers(Handle timer)
 		
 		NewChoosens[ChoosenPlayer] = true;
 		
-		char name[16];
-		GetClientName(ChoosenPlayer, name, sizeof(name));
 		if(ChoosensNum == 1)
-			DRPrintToChatAll("{GREEN}%t {OLIVE}> {LIGHTGREEN}%t {RED}%s {LIGHTGREEN}%t", "DEATHRUN", "PLAYER", name, "HAS_BEEN_CHOOSEN");
+			DRPrintToChatAll("{GREEN}%t {OLIVE}> {LIGHTGREEN}%t {RED}%N {LIGHTGREEN}%t", "DEATHRUN", "PLAYER", ChoosenPlayer, "HAS_BEEN_CHOOSEN");
 			
 		else
 		{
 			if(i == 0)
-				Format(buffer, sizeof(buffer), "{RED}%s", name);
+				Format(buffer, sizeof(buffer), "{RED}%N", ChoosenPlayer);
 				
 			else
-				Format(buffer, sizeof(buffer), "%s{LIGHTGREEN}, {RED}%s", buffer, name);
+				Format(buffer, sizeof(buffer), "%s{LIGHTGREEN}, {RED}%N", buffer, ChoosenPlayer);
 		}
 		
 		CS_SwitchTeam(ChoosenPlayer, NewTeam);
@@ -283,13 +286,36 @@ public Action ChoosePlayers(Handle timer)
 	if(ChoosensNum != 1)
 	{
 		DRPrintToChatAll("{GREEN}%t {OLIVE}> {LIGHTGREEN}%t%s", "DEATHRUN", "NEW_CHOOSENS", buffer);
-		DRPrintToChatAll("{GREEN}%t {OLIVE}> {LIGHTGREEN}%t%s", "DEATHRUN", "NEW_CHOOSENS", buffer);
+		//DRPrintToChatAll("{GREEN}%t {OLIVE}> {LIGHTGREEN}%t%s", "DEATHRUN", "NEW_CHOOSENS", buffer);
 	}
 	
 	return Plugin_Continue;
 }
 
 int GetRandomPlayer()
+{
+	int iChoosenClient;
+	int iCounter = 1;
+	while(1 == 1) // IDK how to get rid of this without adding a real check
+	{
+		// I hope this is correct
+		iChoosenClient = Client_GetRandom(172292); // CLIENTFILTER_INGAMEAUTH(256), CLIENTFILTER_NOBOTS(4), CLIENTFILTER_NOOBSERVERS(32768), CLIENTFILTER_NOSPECTATORS(8192), CLIENTFILTER_TEAMTWO(131072)
+		if(NewChoosens[iChoosenClient] || OldChoosens[iChoosenClient])
+			break;
+			
+		if(iCounter > (MaxClients * 2)) // Twice the Amount of Players beeing Online right now, we would really need MUCH bad Luck to reach this Point
+		{
+			iChoosenClient = 0; // 0 = Failed
+			break;
+		}
+		
+		iCounter++;
+	}
+	
+	return iChoosenClient;
+}
+
+/*int GetRandomPlayer() // ### Maybe broken? ###
 {
 	int[] PlayerList = new int[MaxClients + 1];
 	int PlayerCount;
@@ -312,4 +338,4 @@ int GetRandomPlayer()
 		return -1;
 		
 	return PlayerList[GetRandomInt(0, PlayerCount - 1)];
-}
+}*/
