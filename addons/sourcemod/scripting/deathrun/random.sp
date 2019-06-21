@@ -296,7 +296,7 @@ int GetRandomPlayer()
 {
 	int iChoosenClient;
 	int iCounter = 1;
-	while(1 == 1) // IDK how to get rid of this without adding a real check
+	for(;;)
 	{
 		// I hope this is correct
 		iChoosenClient = Client_GetRandom(172292); // CLIENTFILTER_INGAMEAUTH(256), CLIENTFILTER_NOBOTS(4), CLIENTFILTER_NOOBSERVERS(32768), CLIENTFILTER_NOSPECTATORS(8192), CLIENTFILTER_TEAMTWO(131072)
