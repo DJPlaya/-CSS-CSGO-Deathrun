@@ -11,6 +11,7 @@
 #include <sdkhooks>
 #include <smlib/clients>
 
+#define loop for(;;)
 #define PLUGIN_VERSION "2.0.dev11-B"
 
 #define ROUNDEND_CTS_WIN 8
